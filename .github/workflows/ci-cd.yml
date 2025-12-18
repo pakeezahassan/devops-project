@@ -25,18 +25,24 @@ jobs:
 
     - name: Verify Project Structure
       run: |
+        pwd
         ls -la
+        echo "--- Checking project folder ---"
         ls -la project/ || echo "project folder not found"
+        echo "--- Checking frontend folder ---"
         ls -la project/frontend || echo "frontend folder not found"
+        echo "--- Checking backend folder ---"
         ls -la project/backend || echo "backend folder not found"
 
     - name: Build Frontend Image
-      working-directory: .
-      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend -f project/frontend/Dockerfile project/frontend
+      run: |
+        cd project/frontend
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend .
 
     - name: Build Backend Image
-      working-directory: .
-      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/backend -f project/backend/Dockerfile project/backend
+      run: |
+        cd project/backend
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/backend .
 
     - name: Run Automated Tests
       run: echo "Tests passed successfully"
