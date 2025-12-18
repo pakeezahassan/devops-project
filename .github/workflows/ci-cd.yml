@@ -1,42 +1,11 @@
-name: CI-CD Pipeline
-
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-jobs:
-  build-test-push:
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
-
-    - name: Set up Docker
-      uses: docker/setup-buildx-action@v2
-
-    - name: Login to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKER_USERNAME }}
-        password: ${{ secrets.DOCKER_PASSWORD }}
-
-    - name: Build Frontend Image
-      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend ./frontend
+- name: Build Frontend Image
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/frontend ./project/frontend
 
     - name: Build Backend Image
-      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/backend ./backend
-
-    - name: Run Automated Tests
-      run: echo "Tests passed successfully"
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/backend ./project/backend
 
     - name: Push Frontend Image
       run: docker push ${{ secrets.DOCKER_USERNAME }}/frontend
 
     - name: Push Backend Image
       run: docker push ${{ secrets.DOCKER_USERNAME }}/backend
-
-    - name: Deploy (Staging / Kubernetes Placeholder)
-      run: echo "Deployed to staging/Kubernetes"
